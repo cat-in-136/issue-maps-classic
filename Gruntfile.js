@@ -47,6 +47,7 @@ module.exports = function(grunt) {
           presets: "es2015"
         },
         files: {
+          "public/js/setting.js": "public/js/setting.es",
           "public/js/main.js": "public/js/main.es"
         }
       }
