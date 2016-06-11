@@ -1,0 +1,21 @@
+{
+  "name": "issue-maps-classic",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "bower install && rm -rf public && grunt build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cat-in-136",
+  "license": "MIT",
+  "devDependencies": {
+    "bower": "~1.7.9",
+    "grunt": "~1.0.1",
+    "grunt-contrib-copy": "~1.0.0",
+    "grunt-babel": "~6.0.0",
+    "babel-preset-es2015": "~6.9.0",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-contrib-connect": "~1.0.2"
+  }
+}

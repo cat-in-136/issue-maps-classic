@@ -1,0 +1,20 @@
+{
+  "name": "issue-maps-classic",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "cat-in-136"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
