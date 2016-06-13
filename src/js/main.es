@@ -68,11 +68,6 @@ class IssueMapsClassic {
     this.setting = setting;
     this.service = new IssueMapsService();
     this.start();
-    $(window).on("resize", () => {
-      $("#map").width("100%").height($(window).height() - $(".navbar").height() - 10);
-    });
-    $(".navbar-collapse").on("shown.bs.collapse hidden.bs.collapse", () => $(window).trigger("resize"));
-    $(window).trigger("resize");
   }
   start() {
     this.map = new google.maps.Map($("#map")[0], {
@@ -99,6 +94,18 @@ class IssueMapsClassic {
         });
         return marker;
       });
+
+      $("#issuesList").replaceWith(data.map((issue) => {
+        let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
+        return `<a href="javascript:void(0);" class="list-group-item">
+                  <h4 class="list-group-item-heading">${IssueMapsClassic.escapeHTML(issue.title)}</h4>
+                  <p class="list-group-item-text">
+                    <span class="label label-default">${issue.start_date}</span>
+                    ${IssueMapsClassic.escapeHTML(issue.description)}
+                  </p>
+                </a>`;
+      }).join(""));
+
     }).catch(() => {
       this.retriveNewRedmineKey().then(() => this.start()).catch(() => this.start());
     });
