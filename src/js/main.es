@@ -95,7 +95,7 @@ class IssueMapsClassic {
         return marker;
       });
 
-      $("#issuesList").replaceWith(data.map((issue) => {
+      $("#issuesList").html(data.map((issue) => {
         let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
         return `<a href="javascript:void(0);" class="list-group-item">
                   <h4 class="list-group-item-heading">${IssueMapsClassic.escapeHTML(issue.title)}</h4>
