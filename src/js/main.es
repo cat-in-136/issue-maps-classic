@@ -114,18 +114,11 @@ class IssueMapsClassic {
         return marker;
       });
 
-      $("#issuesList").html(data.map((issue) => {
-        let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
-        return `<a href="javascript:void(0);" class="list-group-item">
-                  <h4 class="list-group-item-heading">${IssueMapsClassic.escapeHTML(issue.title)}</h4>
-                  <p class="list-group-item-text">
-                    <span class="label label-default">${issue.start_date}</span>
-                    ${IssueMapsClassic.escapeHTML(issue.description)}
-                  </p>
-                </a>`;
-      }).join(""));
+      $("#issueSearch").on("change keyup", () => this.updateIssueList(data));
+      this.updateIssueList(data);
 
-    }).catch(() => {
+    }).catch((ex) => {
+      console.error(ex);
       this.retriveNewRedmineKey().then(() => this.start()).catch(() => this.start());
     });
   }
@@ -147,6 +140,37 @@ class IssueMapsClassic {
       $("#map").css("height", $(window).height() - $(".navbar").outerHeight());
       google.maps.event.trigger(this.map, "resize");
     }
+  }
+  updateIssueList(data) {
+    let keyphrase = $.trim($("#issueSearch").val()).toLowerCase();
+
+    $("#issuesList .issues").html(data.filter((issue) => {
+      if (keyphrase.match(/^\s*$/)) {
+        return true;
+      } else if (keyphrase.match(/^id:([0-9]+)$/)) {
+        return issue.id === parseInt(RegExp.$1);
+      } else {
+        if (keyphrase.match(/category:([\s]+)/)) {
+          if (issue.category !== RegExp.$1.toLowerCase()) {
+            return false;
+          }
+          keyphrase = $.trim(keyphrase.replace(/category:([\s]+)/, ""));
+        }
+
+        return [issue.title, issue.description, issue.author, issue.category].some((v) => {
+          return (!!v) && ($.trim(v).toLowerCase().indexOf(keyphrase) >= 0);
+        });
+      }
+    }).map((issue) => {
+      let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
+      return `<a href="javascript:void(0);" class="list-group-item">
+                <h4 class="list-group-item-heading">${IssueMapsClassic.escapeHTML(issue.title)}</h4>
+                <p class="list-group-item-text">
+                  <span class="label label-default">${issue.start_date}</span>
+                  ${IssueMapsClassic.escapeHTML(issue.description)}
+                </p>
+              </a>`;
+    }).join(""));
   }
   static escapeHTML(val) {
     return $("<div />").text(val).html();
