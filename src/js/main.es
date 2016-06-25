@@ -25,7 +25,7 @@ class IssueMapsService {
       $.ajax({
         method: "GET",
         url: url,
-        beforeSend: function(xhr) {
+        beforeSend: (xhr) => {
           xhr.setRequestHeader("X-Redmine-API-Key", this.redmineAccessKey);
         }
       }).then((data, textStatus, jqXHR) => {
@@ -43,9 +43,11 @@ class IssueMapsService {
     return issues.map(IssueMapsService.formatIssue).filter((issue) => issue.latitude);
   }
   static formatIssue(issue) {
-    for (var c of issue.custom_fields) {
-      if (c.name == "場所" && c.value) {
-        [issue.latitude, issue.longitude] = c.value.split(",");
+    if (issue.custom_fields) {
+      for (var c of issue.custom_fields) {
+        if (c.name == "場所" && c.value) {
+          [issue.latitude, issue.longitude] = c.value.split(",");
+        }
       }
     }
     return {
