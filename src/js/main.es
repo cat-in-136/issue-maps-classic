@@ -70,6 +70,25 @@ class IssueMapsClassic {
     this.start();
   }
   start() {
+    $(".navbar-nav a[href^='#']").on("click", (event) => {
+      $(".navbar-nav a[href^='#']").each((index, e) => {
+        let target = $($(e).attr("href"));
+        if (e == event.target) {
+          $(e).parent().addClass("active");
+          target.collapse("show");
+        } else {
+          $(e).parent().removeClass("active");
+          target.collapse("hide");
+        }
+      });
+      event.preventDefault();
+    });
+
+    $(window).on("resize", () => this.repaintMap());
+    $(".navbar .navbar-collapse").on("shown.bs.collapse hidden.bs.collapse", () => this.repaintMap());
+    $("#map").on("shown.bs.collapse", () => this.repaintMap());
+    $(".navbar-nav a[href='#map']").trigger("click");
+
     this.map = new google.maps.Map($("#map")[0], {
       center: { lat: 35.68519569653298, lng: 139.75278877116398 },
       zoom: 12,
@@ -122,6 +141,12 @@ class IssueMapsClassic {
         window.setTimeout(() => resolve(key), 1000);
       });
     });
+  }
+  repaintMap() {
+    if ($("#map").hasClass("in")) {
+      $("#map").css("height", $(window).height() - $(".navbar").outerHeight());
+      google.maps.event.trigger(this.map, "resize");
+    }
   }
   static escapeHTML(val) {
     return $("<div />").text(val).html();
