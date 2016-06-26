@@ -2,6 +2,11 @@ module.exports = function(grunt) {
   var path = require("path");
 
   grunt.initConfig({
+    clean: {
+      build: {
+        src: ["public"]
+      }
+    },
     copy: {
       bower_components: {
         files: [
@@ -79,12 +84,23 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask("init", ["clean", "bower:install"]);
+  grunt.registerTask("bower_install", function () {
+    var child = grunt.util.spawn({
+      cmd: path.join.apply(path, "node_modules/.bin/bower".split("/")),
+      args: ["install"]
+    }, this.async());
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+  });
+
+
+  grunt.registerTask("init", ["clean", "bower_install"]);
   grunt.registerTask("build", ["copy:bower_components", "copy:main", "copy:js", "babel"]);
   grunt.registerTask("serve", ["connect", "watch"]);
   grunt.registerTask("default", ["serve"]);

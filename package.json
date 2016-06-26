@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "bower install && rm -rf public && grunt build",
+    "init": "grunt init",
+    "build": "grunt build",
     "test": "npm build"
   },
   "author": "cat-in-136",
