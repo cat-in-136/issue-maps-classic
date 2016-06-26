@@ -4,7 +4,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     clean: {
       build: {
-        src: ["public"]
+        src: ["public", "tmp"]
+      },
+      tmp: {
+        src: ["tmp"]
       }
     },
     copy: {
@@ -33,27 +36,27 @@ module.exports = function(grunt) {
             dest: "public"
           },
         ],
-      },
+      }
+    },
+    concat: {
       js: {
-        files: [
-          {
-            expand: true,
-            cwd: "src/js",
-            src: ["*.js", "*.es"],
-            dest: "public/js",
-          }
-        ]
+        options: {
+          sourceMap: true
+        },
+        files: {
+          "tmp/main.es": ["src/js/*.js", "src/js/*.es"]
+        }
       }
     },
     babel: {
-      dist: {
+      js: {
         options: {
           sourceMap: true,
+          get inputSourceMap() { return grunt.file.readJSON("tmp/main.es.map"); }, // HACK
           presets: "es2015"
         },
         files: {
-          "public/js/setting.js": "public/js/setting.es",
-          "public/js/main.js": "public/js/main.es"
+          "public/js/main.js": "tmp/main.es"
         }
       }
     },
@@ -67,7 +70,7 @@ module.exports = function(grunt) {
       },
       babel: {
         files: "src/js/*",
-        tasks: ["copy:js", "babel"],
+        tasks: ["concat:js", "babel:js", "clean:tmp"],
         options: {
           livereload: true
         }
@@ -85,6 +88,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -101,7 +105,7 @@ module.exports = function(grunt) {
 
 
   grunt.registerTask("init", ["clean", "bower_install"]);
-  grunt.registerTask("build", ["copy:bower_components", "copy:main", "copy:js", "babel"]);
+  grunt.registerTask("build", ["copy:bower_components", "copy:main", "concat:js", "babel:js", "clean:tmp"]);
   grunt.registerTask("serve", ["connect", "watch"]);
   grunt.registerTask("default", ["serve"]);
 };
