@@ -1,6 +1,6 @@
 {
   "name": "issue-maps-classic",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "classical style implementation of diffshare/issue-maps",
   "main": "index.js",
   "scripts": {
