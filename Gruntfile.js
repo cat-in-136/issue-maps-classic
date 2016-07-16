@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     clean: {
       build: {
-        src: ["public", "tmp"]
+        src: ["public", "public.zip", "tmp"]
       },
       tmp: {
         src: ["tmp"]
@@ -84,6 +84,16 @@ module.exports = function(grunt) {
           base: "public"
         }
       }
+    },
+    compress: {
+      main: {
+        options: {
+          archive: "public.zip"
+        },
+        files: [
+          { src: ["public/**"] }
+        ]
+      }
     }
   });
 
@@ -93,6 +103,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
   grunt.registerTask("bower_install", function () {
     var child = grunt.util.spawn({

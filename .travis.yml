@@ -3,3 +3,16 @@ sudo: false
 before_script:
   - "npm run init"
   - "npm run build"
+before_deploy:
+  - "npm run zip"
+deploy:
+  provider: releases
+  api_key:
+    secure: "x4lu1Haj0E3nKAck+Z4JTk2Z9AjnfpB6IiUmnicYTjmvqMzOHzwpF59DHNg5mTMlVy+hH4cDUUjvGnNDjhdvR4hLMAA6Rj3y0sjn7iUSDAgsnpbUvnFShMFBA+b6BrthwpNS3RN/rNrXNvsxZDAsYatz9T3Psamp2RpcqJBLiLUeh/AluFdPSwl5LHJ91ZWQAuaFX3Hp7O/ZIOCRDc/tlnyrVXozC+mM7OP9h8y+my4jqtyNMaSoWuxrogprfcfNbws0IJHkAm0jWTKbiSWuH7LkAhhYKnQI/InZRWhibe79yjtzAt0HPbu6uDUv6tpjrhfqI70a58jVfa5AlbPgzas4yfzHaEzCwM1pYznAJ5wgc/PRPF9nxyHjCIlOcZGbKACsa2/aZ14xBX/kJX1WyO5M4PaTnTmksErNpGjnANXyxrEv9UzXe7Y/WWeTtjks/2g9P+KcKnRbMZ3msnIcJcWXJwq//iAM8dUcg1Bjni1j5p4Clp0Jx07zEwRVbC05IgRGUQEKsfJUN2w5a3MJ8G0pbEWBrdNyzwpIRMyJ8Zm3us5bPsPPOjkuzlSkY1ZCZtkcBYQjB1tgeGVJTfSlDPBlgvI4AqTTtYh/1+ih3+idlsu3BK+j42PlixGuWe3X0QOnnY3BWa/Mybw5N4PGliKdzDyVXmCWjLvMzDBF27s="
+  file: public.zip
+  all_branches: true
+  on:
+    tags: true
+    repo: cat-in-136/issue-maps-classic
+after_script:
+  - "npm run clean"
