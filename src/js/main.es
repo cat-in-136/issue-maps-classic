@@ -25,6 +25,9 @@ class IssueMapsService {
       $.ajax({
         method: "GET",
         url: url,
+        xhrFields: {
+          withCredentials: true
+        },
         beforeSend: (xhr) => {
           xhr.setRequestHeader("X-Redmine-API-Key", this.redmineAccessKey);
         }
