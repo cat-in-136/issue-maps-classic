@@ -182,7 +182,6 @@ class IssueMapsClassic {
       return `<div class="list-group-item">
                 <h4 class="list-group-item-heading"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h4>
                 <p class="list-group-item-text">
-                  <span class="label label-default">${issue.start_date}</span>
                   ${IssueMapsClassic.escapeHTML(issue.description)}
                 </p>
               </div>`;
