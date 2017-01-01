@@ -55,6 +55,10 @@ class MapsController {
       google.maps.event.trigger(this.map, "resize");
     }
   }
+  gotoIssue(issue) {
+    if (!issue) { return; }
+    this.map.setCenter({lat: parseFloat(issue.latitude), lng: parseFloat(issue.longitude)});
+  }
 
   get issues() {
     return (this._issues || []);
@@ -63,11 +67,4 @@ class MapsController {
     this._issues = value;
     this.apply();
   }
-  //get selectedIssue() {
-  //  return this._selectedIssue;
-  //}
-  //set selectedIssue(value) {
-  //  this._selectedIssue = value;
-  //  this.apply();
-  //}
 }

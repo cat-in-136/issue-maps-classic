@@ -3,12 +3,25 @@ class IssuesListController {
     this.listElem = list;
     this.searchTextElem = searchText;
 
-    $(this.searchTextElem).on("change keyup", () => this.apply());
+    $(this.searchTextElem).on("change keyup", () => this.updateFilteredIssues());
   }
   apply() {
-    let keyphrase = $.trim($(this.searchTextElem).val()).toLowerCase();
+    $("ul", this.listElem).html(this.filteredIssues.map((issue) => {
+      let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
 
-    $("ul", this.listElem).html(this.issues.filter((issue) => {
+      return `<li class="mdl-list__item mdl-list__item--three-line">
+                <span class="mdl-list__item-primary-content">
+                  <a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a>
+                  <span class="mdl-list__item-text-body">
+                    ${IssueMapsClassic.escapeHTML(issue.description)}
+                  </span>
+                </span>
+              </li>`;
+    }).join(""));
+  }
+  updateFilteredIssues() {
+    let keyphrase = $.trim($(this.searchTextElem).val()).toLowerCase();
+    this.filteredIssues = this.issues.filter((issue) => {
       if (keyphrase.match(/^\s*$/)) {
         return true;
       } else if (keyphrase.match(/^id:([0-9]+)$/)) {
@@ -25,18 +38,7 @@ class IssuesListController {
           return (!!v) && ($.trim(v).toLowerCase().indexOf(keyphrase) >= 0);
         });
       }
-    }).map((issue) => {
-      let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
-
-      return `<li class="mdl-list__item mdl-list__item--three-line">
-                <span class="mdl-list__item-primary-content">
-                  <a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a>
-                  <span class="mdl-list__item-text-body">
-                    ${IssueMapsClassic.escapeHTML(issue.description)}
-                  </span>
-                </span>
-              </li>`;
-    }).join(""));
+    });
   }
 
   get issues() {
@@ -44,6 +46,16 @@ class IssuesListController {
   }
   set issues(value) {
     this._issues = value;
+    this.updateFilteredIssues();
+  }
+  get filteredIssues() {
+    return (this._filteredIssues || []);
+  }
+  set filteredIssues(value) {
+    this._filteredIssues = value;
     this.apply();
+    if (typeof(this.onfilteredissuesupdated) === "function") {
+      this.onfilteredissuesupdated.call(this, {filteredIssues: value});
+    }
   }
 }

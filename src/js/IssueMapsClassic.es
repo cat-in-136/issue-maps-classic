@@ -13,9 +13,12 @@ class IssueMapsClassic {
     this.mapController.onmarkerclicked = ({issue}) => {
       $("#issueSearch").val(`id:${issue.id}`).select().trigger("change");
     };
+    this.issuesListController.onfilteredissuesupdated = () => {
+      this.mapController.issues = this.issuesListController.filteredIssues;
+    };
 
     this.service.fetchRedmineIssues().then((data) => {
-      this.mapController.issues = data;
+      //this.mapController.issues = data;
       this.issuesListController.issues = data;
     }).catch((ex) => {
       console.error(ex);
