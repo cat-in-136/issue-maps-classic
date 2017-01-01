@@ -12,6 +12,5 @@ replace Uri in src/js/setting.es
 # Build
 ```
 $ npm install
-$ bower install
 $ grunt build
 ```

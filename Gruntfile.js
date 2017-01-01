@@ -11,22 +11,6 @@ module.exports = function(grunt) {
       }
     },
     copy: {
-      bower_components: {
-        files: [
-          {
-            expand: true,
-            cwd: "bower_components/bootstrap/dist",
-            src: ["**"],
-            dest: "public/lib/bootstrap"
-          },
-          {
-            expand: true,
-            cwd: "bower_components/jquery/dist",
-            src: ["**"],
-            dest: "public/lib/jquery"
-          }
-        ]
-      },
       main: {
         files: [
           {
@@ -105,18 +89,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask("bower_install", function () {
-    var child = grunt.util.spawn({
-      cmd: path.join.apply(path, "node_modules/.bin/bower".split("/")),
-      args: ["install"]
-    }, this.async());
-    child.stdout.pipe(process.stdout);
-    child.stderr.pipe(process.stderr);
-  });
 
-
-  grunt.registerTask("init", ["clean", "bower_install"]);
-  grunt.registerTask("build", ["copy:bower_components", "copy:main", "concat:js", "babel:js", "clean:tmp"]);
+  grunt.registerTask("init", ["clean"]);
+  grunt.registerTask("build", ["copy:main", "concat:js", "babel:js", "clean:tmp"]);
   grunt.registerTask("serve", ["connect", "watch"]);
   grunt.registerTask("default", ["serve"]);
 };

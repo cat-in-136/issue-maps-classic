@@ -72,28 +72,27 @@ class IssueMapsClassic {
   constructor(setting) {
     this.setting = setting;
     this.service = new IssueMapsService();
-    this.start();
+
+    $("dialog").each(function () {
+      if (! this.showModal) {
+        dialogPolyfill.registerDialog(this)
+      }
+    });
+    $(window).one("load", () => {
+      this.map = new google.maps.Map($("#map")[0], {
+        center: { lat: 35.68519569653298, lng: 139.75278877116398 },
+        zoom: 12,
+      });
+
+      this.start();
+    });
+    $(window).on("resize", () => this.repaintMap());
   }
   start() {
-    $(".navbar-nav a[href^='#']").on("click", (event) => {
-      this.showPage($(event.target).attr("href").replace("#", ""));
-      event.preventDefault();
-    });
-
-    $(window).on("resize", () => this.repaintMap());
-    $(".navbar .navbar-collapse").on("shown.bs.collapse hidden.bs.collapse", () => this.repaintMap());
-    $("#map").on("shown.bs.collapse", () => this.repaintMap());
-    this.showPage("map");
-
-    this.map = new google.maps.Map($("#map")[0], {
-      center: { lat: 35.68519569653298, lng: 139.75278877116398 },
-      zoom: 12,
-    });
     this.markers = [];
     this.infowin = new google.maps.InfoWindow();
 
     this.service.fetchRedmineIssues().then((data) => {
-      
       this.markers = data.map((issue) => {
         let marker = new google.maps.Marker({
           position: {lat: parseFloat(issue.latitude), lng: parseFloat(issue.longitude)},
@@ -108,7 +107,6 @@ class IssueMapsClassic {
           );
           $("a[href]", content).on("click", (event) => {
             this.infowin.close();
-            this.showPage("issuesList");
             $("#issueSearch").val(`id:${issue.id}`).trigger("change");
             event.preventDefault();
           });
@@ -120,18 +118,24 @@ class IssueMapsClassic {
 
       $("#issueSearch").on("change keyup", () => this.updateIssueList(data));
       this.updateIssueList(data);
-
     }).catch((ex) => {
       console.error(ex);
       this.retriveNewRedmineKey().then(() => this.start()).catch(() => this.start());
     });
+
+    window.setTimeout(() => $(window).trigger("resize"), 5000);
   }
   retriveNewRedmineKey() {
     return new Promise((resolve, reject) => {
-      $("#redmineKeyDialog").modal("show");
+      let dialog = $("#redmineKeyDialog")[0];
+      dialog.showModal();
       $("#redmineKey").focus();
 
-      $("#redmineKeyDialog").one("hide.bs.modal", () => {
+      $("#redmineKeyDialog form[method=dialog]").one("submit", (event) => {
+        event.preventDefault();
+        dialog.close();
+      });
+      $(dialog).one("close", () => {
         let key = $("#redmineKey").val().trim();
         if (key === "") { window.setTimeout(() => reject(), 1000); }
         this.service.redmineAccessKey = key;
@@ -139,28 +143,15 @@ class IssueMapsClassic {
       });
     });
   }
-  showPage(id) {
-    $(".navbar-nav a[href^='#']").each((index, e) => {
-      let target = $(e).attr("href");
-      if (target === `#${id}`) {
-        $(e).parent().addClass("active");
-        $(target).collapse("show");
-      } else {
-        $(e).parent().removeClass("active");
-        $(target).collapse("hide");
-      }
-    });
-  }
   repaintMap() {
-    if ($("#map").hasClass("in")) {
-      $("#map").css("height", $(window).height() - $(".navbar").outerHeight());
+    if (this.map) {
       google.maps.event.trigger(this.map, "resize");
     }
   }
   updateIssueList(data) {
     let keyphrase = $.trim($("#issueSearch").val()).toLowerCase();
 
-    $("#issuesList .issues").html(data.filter((issue) => {
+    $("#issuesList ul").html(data.filter((issue) => {
       if (keyphrase.match(/^\s*$/)) {
         return true;
       } else if (keyphrase.match(/^id:([0-9]+)$/)) {
@@ -179,12 +170,15 @@ class IssueMapsClassic {
       }
     }).map((issue) => {
       let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
-      return `<div class="list-group-item">
-                <h4 class="list-group-item-heading"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h4>
-                <p class="list-group-item-text">
-                  ${IssueMapsClassic.escapeHTML(issue.description)}
-                </p>
-              </div>`;
+
+      return `<li class="mdl-list__item mdl-list__item--three-line">
+                <span class="mdl-list__item-primary-content">
+                  <a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a>
+                  <span class="mdl-list__item-text-body">
+                    ${IssueMapsClassic.escapeHTML(issue.description)}
+                  </span>
+                </span>
+              </li>`;
     }).join(""));
   }
   static escapeHTML(val) {
