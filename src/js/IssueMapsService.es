@@ -57,10 +57,12 @@ class IssueMapsService {
       id: issue.id,
       latitude: issue.latitude,
       longitude: issue.longitude,
+      status: issue.status.name,
       title: issue.subject,
       description: issue.description,
       author: issue.author.name,
       start_date: issue.start_date,
+      due_date: issue.due_date,
       created_on: issue.created_on,
       category: issue.category && issue.category.name,
     };

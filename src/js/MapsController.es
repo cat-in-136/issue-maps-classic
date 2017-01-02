@@ -57,13 +57,14 @@ class MapsController {
   }
   gotoIssue(issue) {
     if (!issue) { return; }
-    this.map.setCenter({lat: parseFloat(issue.latitude), lng: parseFloat(issue.longitude)});
+    this.map.panTo({lat: parseFloat(issue.latitude), lng: parseFloat(issue.longitude)});
   }
 
   get issues() {
     return (this._issues || []);
   }
   set issues(value) {
+    if (!value || typeof(value) === "array") { throw Error("Wrong issues"); }
     this._issues = value;
     this.apply();
   }
