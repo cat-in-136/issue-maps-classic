@@ -7,5 +7,11 @@ classical style implementation of diffshare/issue-maps.
 # Build
 ```
 $ npm install
-$ grunt build
+$ npm run-script build
+```
+
+# Preview
+```
+$ npm install
+$ npm run-script serve
 ```

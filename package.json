@@ -8,6 +8,7 @@
     "init": "grunt init",
     "build": "grunt build",
     "zip": "grunt compress",
+    "serve": "grunt serve",
     "test": "npm build"
   },
   "repository": {
