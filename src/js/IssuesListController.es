@@ -1,8 +1,9 @@
 class IssuesListController {
-  constructor({list, searchText, searchTextLabel}) {
+  constructor({list, searchText, searchTextLabel, urlResolver}) {
     this.listElem = list;
     this.searchTextElem = searchText;
     this.searchTextLabelElem = searchTextLabel;
+    this.urlResolver = urlResolver;
 
     $(this.searchTextElem).on("change keyup", () => this.updateFilteredIssues());
     $(this.listElem).on("click", "[data-issue-id] .mdl-x-expansion-expander-button", (event) => {
@@ -12,7 +13,7 @@ class IssuesListController {
   }
   apply() {
     $(this.listElem).html(this.filteredIssues.map((issue) => {
-      return IssuesListController.renderIssue({issue, isSelected: issue == this._selectedIssue});
+      return this.renderIssue({issue, isSelected: issue == this._selectedIssue});
     }).join(""));
   }
   updateSelectedIssue() {
@@ -23,12 +24,12 @@ class IssuesListController {
       if (previousActive.length > 0) {
         let issue = this.issues.find((v) => v.id == parseInt(previousActive.data("issue-id")));
         previousActive.replaceWith(
-          IssuesListController.renderIssue({issue, isSelected: false})
+          this.renderIssue({issue, isSelected: false})
         );
       }
       if (this.selectedIssue) {
         $(`[data-issue-id="${this.selectedIssueId}"]`, this.listElem).replaceWith(
-          IssuesListController.renderIssue({issue: this.selectedIssue, isSelected: true})
+          this.renderIssue({issue: this.selectedIssue, isSelected: true})
         );
       }
 
@@ -58,8 +59,8 @@ class IssuesListController {
       }
     });
   }
-  static renderIssue({issue, isSelected=false}) {
-    let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
+  renderIssue({issue, isSelected=false}) {
+    let url = this.urlResolver.getIssueURL(issue);
 
     let supportingText = "";
     if (isSelected) {

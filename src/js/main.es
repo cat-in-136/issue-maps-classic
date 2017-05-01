@@ -1,3 +1,3 @@
 $(() => {
-  new IssueMapsClassic(IssueMapsClassicSetting);
+  new IssueMapsClassic();
 });

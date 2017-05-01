@@ -1,9 +1,9 @@
 class IssueMapsClassic {
-  constructor(setting) {
-    this.setting = setting;
+  constructor() {
     this.service = new IssueMapsService();
-    this.mapController = new MapsController({element: $("#map")[0]});
-    this.issuesListController = new IssuesListController({list: "#issuesList", searchText: "#issueSearch", searchTextLabel: "label[for=issueSearch]"});
+    this.urlResolver = new IssueMapsURLResolver(this.service);
+    this.mapController = new MapsController({element: $("#map")[0], urlResolver: this.urlResolver});
+    this.issuesListController = new IssuesListController({list: "#issuesList", searchText: "#issueSearch", searchTextLabel: "label[for=issueSearch]", urlResolver: this.urlResolver});
 
     $("dialog").each(function () {
       if (! this.showModal) {
@@ -21,6 +21,14 @@ class IssueMapsClassic {
       this.state = (issue)? `id:${issue.id}` : null;
     };
 
+    $("#logoutRedmine").on("click", () => {
+      this.service.logout().then(() => {
+        this.issuesListController.issues = [];
+        this.issues = [];
+        this.start();
+      });
+    });
+
     this.start();
   }
   start() {
@@ -30,24 +38,28 @@ class IssueMapsClassic {
       this.issues = data;
     }).catch((ex) => {
       console.error(ex);
-      this.retriveNewRedmineKey().then(() => this.start()).catch(() => this.start());
+      this.retriveNewRedmineAddressKey().then(() => this.start()).catch(() => this.start());
     });
   }
-  retriveNewRedmineKey() {
+  retriveNewRedmineAddressKey() {
     return new Promise((resolve, reject) => {
-      let dialog = $("#redmineKeyDialog")[0];
+      let dialog = $("#redmineAddressKeyDialog")[0];
       dialog.showModal();
       $("#redmineKey").focus();
+      $("#logoutRedmine").attr("disabled", true);
 
-      $("#redmineKeyDialog form[method=dialog]").one("submit", (event) => {
+      $("#redmineAddressKeyDialog form[method=dialog]").one("submit", (event) => {
         event.preventDefault();
         dialog.close();
       });
       $(dialog).one("close", () => {
+        let address = $("#redmineAddress").val().trim();
         let key = $("#redmineKey").val().trim();
-        if (key === "") { window.setTimeout(() => reject(), 1000); }
+        if ((address === "") || (key === "")) { window.setTimeout(() => reject(), 1000); }
+        this.service.redmineAddress = address;
         this.service.redmineAccessKey = key;
-        window.setTimeout(() => resolve(key), 1000);
+        $("#logoutRedmine").attr("disabled", false);
+        window.setTimeout(() => resolve(address, key), 1000);
       });
     });
   }

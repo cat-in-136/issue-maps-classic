@@ -1,6 +1,7 @@
 class MapsController {
-  constructor({element}) {
+  constructor({element, urlResolver}) {
     this.element = element;
+    this.urlResolver = urlResolver;
 
     this.markers = [];
     this.infowin = new google.maps.InfoWindow();
@@ -31,7 +32,7 @@ class MapsController {
         title: issue.title
       });
       google.maps.event.addListener(marker, "click", (event) => {
-        let url = encodeURI(IssueMapsClassicSetting.issue_url.replace(":id", issue.id).replace(".json", ""));
+        let url = this.urlResolver.getIssueURL(issue);
         let content = $("<div />").html(
           `<div class="issue-title"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></div>
            <div class="issue-description">${IssueMapsClassic.escapeHTML(issue.description)}</div>`

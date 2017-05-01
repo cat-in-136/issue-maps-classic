@@ -1,8 +1,15 @@
 class IssueMapsService {
 
   get isRedmineLoggedIn() {
-    return !! this.redmineAccessKey
+    return (!! this.redmineAddress) && (!! this.redmineAccessKey);
   }
+  set redmineAddress(address) {
+    window.localStorage.setItem("redmine-address", address);
+  }
+  get redmineAddress() {
+    return window.localStorage.getItem("redmine-address");
+  }
+
   set redmineAccessKey(accessKey) {
     window.localStorage.setItem("redmine-access-key", accessKey);
   }
@@ -10,6 +17,11 @@ class IssueMapsService {
     return window.localStorage.getItem("redmine-access-key");
   }
 
+  logout() {
+    window.localStorage.removeItem("redmine-address");
+    window.localStorage.removeItem("redmine-access-key");
+    return Promise.resolve();
+  }
   login() {
     return this.retriveNewRedmineKey().then((key) => {
       console.debug(key);
@@ -21,7 +33,7 @@ class IssueMapsService {
     }
 
     return new Promise((resolve, reject) => {
-      let url = IssueMapsClassicSetting.issues_url;
+      let url = `${this.redmineAddress}/issues.json`;
       $.ajax({
         method: "GET",
         url: url,
