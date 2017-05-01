@@ -17,7 +17,10 @@ class IssueMapsClassic {
       this.mapController.issues = this.issuesListController.filteredIssues;
     };
     this.issuesListController.onselectedissuechanged = ({selectedIssue: issue}) => {
-      if (issue) { this.mapController.gotoIssue(issue); }
+      if (issue) { this.mapController.gotoIssue(issue, true); }
+      this.state = (issue)? `id:${issue.id}` : null;
+    };
+    this.mapController.onpopupwindowopened = ({issue}) => {
       this.state = (issue)? `id:${issue.id}` : null;
     };
 

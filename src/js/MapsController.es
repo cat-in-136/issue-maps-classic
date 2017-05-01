@@ -46,6 +46,10 @@ class MapsController {
         });
         this.infowin.setContent(content.get(0));
         this.infowin.open(map, marker);
+
+        if (typeof(this.onpopupwindowopened) === "function") {
+          this.onpopupwindowopened({issue});
+        }
       });
       return marker;
     });
@@ -56,9 +60,16 @@ class MapsController {
       google.maps.event.trigger(this.map, "resize");
     }
   }
-  gotoIssue(issue) {
+  gotoIssue(issue, withAnimation=false) {
     if (!issue) { return; }
-    this.map.panTo({lat: parseFloat(issue.latitude), lng: parseFloat(issue.longitude)});
+
+    let marker = this.markers.find((v, i) => this.issues[i] === issue);
+    if (!marker) { throw new Error("Marker not found"); }
+
+    this.map.panTo(marker.getPosition());
+    if (withAnimation) {
+      marker.setAnimation(google.maps.Animation.DROP);
+    }
   }
 
   get issues() {
