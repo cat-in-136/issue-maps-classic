@@ -32,19 +32,9 @@
   <title>Issue Maps Classic</title>
 </head>
 <body>
-
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <button id="menuButton" class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">more_vert</i>
-        </button>
-
-        <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
-            for="menuButton">
-          <li class="mdl-menu__item" id="logoutRedmine">Logout</li>
-        </ul>
-
         <span class="mdl-layout-title mdl-cell--hide-phone">Issue Maps <sup><small>Classic</small></sup></span>
         <div class="mdl-layout-spacer"></div>
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
@@ -71,6 +61,12 @@
         </ul>
       </div>
     </header>
+    <div class="mdl-layout__drawer">
+      <span class="mdl-layout-title">Issue Maps <sup><small>Classic</small></sup></span>
+      <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" href="" id="logoutRedmine">Logout</a>
+      </nav>
+    </div>
     <main class="mdl-layout mdl-grid mdl-grid--no-spacing">
       <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--order-1-phone mdl-layout mdl-color--grey-200">
         <div id="issuesList">
