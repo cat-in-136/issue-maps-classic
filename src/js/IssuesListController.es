@@ -3,6 +3,7 @@ class IssuesListController {
     this.listElem = list;
     this.searchTextElem = searchText;
     this.searchTextLabelElem = searchTextLabel;
+    this.searchTextDataList = $(searchText)[0].list;
     this.urlResolver = urlResolver;
 
     $(this.searchTextElem).on("change keyup", () => this.updateFilteredIssues());
@@ -48,7 +49,7 @@ class IssuesListController {
       } else {
         let keyphrase_without_tag = keyphrase;
         if (keyphrase.match(/(category|カテゴリ):([^\s]+)/)) {
-          if (issue.category !== RegExp.$2.toLowerCase()) {
+          if ((issue.category !== RegExp.$2.toLowerCase()) || (!issue.category && (RegExp.$2 === "null"))) {
             return false;
           }
           keyphrase_without_tag = $.trim(keyphrase_without_tag.replace(/(category|カテゴリ):([^\s]+)/, ""));
@@ -130,6 +131,18 @@ class IssuesListController {
   }
   set issues(value) {
     this._issues = value;
+    if (this.searchTextDataList) {
+      $(this.searchTextDataList).empty();
+      let categories = [];
+      for (let issue of this._issues) {
+        let category = issue.category || "null";
+        if (categories.indexOf(issue.category) < 0) {
+          categories.push(issue.category);
+          $(this.searchTextDataList).append($("<option>").attr("value", `category:${category}`));
+          $(this.searchTextDataList).append($("<option>").attr("value", `カテゴリ:${category}`));
+        }
+      }
+    }
     this.selectedIssue = undefined;
     this.updateFilteredIssues();
   }
