@@ -46,15 +46,16 @@ class IssuesListController {
       } else if (keyphrase.match(/^id:([0-9]+)$/)) {
         return issue.id === parseInt(RegExp.$1);
       } else {
-        if (keyphrase.match(/category:([\s]+)/)) {
-          if (issue.category !== RegExp.$1.toLowerCase()) {
+        let keyphrase_without_tag = keyphrase;
+        if (keyphrase.match(/(category|カテゴリ):([^\s]+)/)) {
+          if (issue.category !== RegExp.$2.toLowerCase()) {
             return false;
           }
-          keyphrase = $.trim(keyphrase.replace(/category:([\s]+)/, ""));
+          keyphrase_without_tag = $.trim(keyphrase_without_tag.replace(/(category|カテゴリ):([^\s]+)/, ""));
         }
 
         return [issue.title, issue.description, issue.author, issue.category].some((v) => {
-          return (!!v) && ($.trim(v).toLowerCase().indexOf(keyphrase) >= 0);
+          return (!!v) && ($.trim(v).toLowerCase().indexOf(keyphrase_without_tag) >= 0);
         });
       }
     });

@@ -60,7 +60,7 @@ class IssueMapsService {
   static formatIssue(issue) {
     if (issue.custom_fields) {
       for (var c of issue.custom_fields) {
-        if (c.name == "場所" && c.value) {
+        if ((c.name == "場所" || c.name.toLowerCase() == "place") && c.value) {
           [issue.latitude, issue.longitude] = c.value.split(",");
         }
       }
