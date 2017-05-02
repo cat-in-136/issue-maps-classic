@@ -13,9 +13,17 @@ class IssuesListController {
     });
   }
   apply() {
-    $(this.listElem).html(this.filteredIssues.map((issue) => {
-      return this.renderIssue({issue, isSelected: issue == this._selectedIssue});
-    }).join(""));
+    if (this.filteredIssues.length > 0) {
+      $(this.listElem).html(this.filteredIssues.map((issue) => {
+        return this.renderIssue({issue, isSelected: issue == this._selectedIssue});
+      }).join(""));
+    } else {
+      $(this.listElem).html(`<div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+        <div class="mdl-card__supporting-text">
+          Issue Not Found
+        </div>
+      </div>`);
+    }
   }
   updateSelectedIssue() {
     let previousActive = $(".is-active[data-issue-id]", this.listElem);
