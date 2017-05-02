@@ -40,7 +40,7 @@ class IssuesListController {
   }
   updateFilteredIssues() {
     let keyphrase = $.trim($(this.searchTextElem).val()).toLowerCase();
-    this.filteredIssues = this.issues.filter((issue) => {
+    let filteredIssues = this.issues.filter((issue) => {
       if (keyphrase.match(/^\s*$/)) {
         return true;
       } else if (keyphrase.match(/^id:([0-9]+)$/)) {
@@ -59,6 +59,11 @@ class IssuesListController {
         });
       }
     });
+
+    if (this._sortOrder && (this._sortOrder !== "id")) {
+      filteredIssues = filteredIssues.sort((a, b) => (a[this._sortOrder] < b[this._sortOrder])? -1 : (a[this._sortOrder] > b[this._sortOrder])? +1 : 0);
+    }
+    this.filteredIssues = filteredIssues;
   }
   renderIssue({issue, isSelected=false}) {
     let url = this.urlResolver.getIssueURL(issue);
@@ -140,6 +145,13 @@ class IssuesListController {
   }
   set selectedIssueId(value) {
     this.selectedIssue = (value >= 0)? this.issues.find((v) => v.id == value) : undefined;
+  }
+  get sortOrder() {
+    return (this._sortOrder || undefined);
+  }
+  set sortOrder(value) {
+    this._sortOrder = value;
+    this.updateFilteredIssues();
   }
   get filteredIssues() {
     return (this._filteredIssues || []);

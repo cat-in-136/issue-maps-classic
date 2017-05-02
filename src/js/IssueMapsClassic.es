@@ -24,6 +24,11 @@ class IssueMapsClassic {
       this.state = (issue)? `id:${issue.id}` : null;
     };
 
+    $("[for=orderButton] .mdl-menu__item").on("click", (event) => {
+      let key = event.target.getAttribute("data-key");
+      this.issuesListController.sortOrder = key;
+    });
+
     $("#logoutRedmine").on("click", () => {
       this.service.logout().then(() => {
         this.issuesListController.issues = [];
