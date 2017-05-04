@@ -46,9 +46,7 @@ class IssueMapsService {
     }
 
     return new Promise((resolve, reject) => {
-      let url = (!this.redmineProjectID || (this.redmineProjectID === ""))?
-        `${this.redmineAddress}/issues.json` :
-        `${this.redmineAddress}/projects/${this.redmineProjectID}/issues.json`;
+      let url = this.getRedmineIssuesHomeAddress("json");
       $.ajax({
         method: "GET",
         url: url,
@@ -70,6 +68,19 @@ class IssueMapsService {
         reject(new Error({data, textStatus, errorThrown}));
       });
     });
+  }
+
+  getRedmineIssuesHomeAddress(format="") {
+    let url = undefined;
+    if (this.isRedmineLoggedIn) {
+      url = (!this.redmineProjectID || (this.redmineProjectID === ""))?
+        `${this.redmineAddress}/issues` :
+        `${this.redmineAddress}/projects/${this.redmineProjectID}/issues`;
+    }
+    if (url && format) {
+      url += `.${format}`;
+    }
+    return url;
   }
 
   static formatIssues(issues) {

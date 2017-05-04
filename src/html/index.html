@@ -26,6 +26,11 @@
       font-size: larger;
       margin-bottom: 0.5ex;
     }
+    #redmineAddressHome {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 
   <script type="application/javascript" defer src="https://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false"></script>
@@ -68,7 +73,12 @@
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">Issue Maps <sup><small>Classic</small></sup></span>
+      <header class="mdl-layout-title mdl-color--primary mdl-color-text--primary-contrast">
+        <span>Issue Maps <sup>Classic</sup></span>
+        <div>
+          <a href="" class="mdl-typography--body-1" id="redmineAddressHome">N/A</a>
+        </div>
+      </header>
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="" id="logoutRedmine">Logout</a>
       </nav>

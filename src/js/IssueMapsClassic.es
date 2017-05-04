@@ -33,6 +33,7 @@ class IssueMapsClassic {
       this.service.logout().then(() => {
         this.issuesListController.issues = [];
         this.issues = [];
+        this.updateDrawer();
         this.start();
       });
     });
@@ -44,6 +45,7 @@ class IssueMapsClassic {
       //this.mapController.issues = data;
       this.issuesListController.issues = data;
       this.issues = data;
+      this.updateDrawer();
     }).catch((ex) => {
       console.error(ex);
       this.retriveNewRedmineAddressKey().then(() => this.start()).catch(() => this.start());
@@ -69,9 +71,22 @@ class IssueMapsClassic {
         this.service.redmineAccessKey = key;
         this.service.redmineProjectID = (projectID === "")? undefined : projectID;
         $("#logoutRedmine").attr("disabled", false);
+
         window.setTimeout(() => resolve(address, key), 1000);
       });
     });
+  }
+
+  updateDrawer() {
+    let redmineAddress = this.service.redmineAddress;
+    if (redmineAddress) {
+      let redmineIssuesHomeAddress = this.service.getRedmineIssuesHomeAddress();
+      $("#redmineAddressHome").prop("href", redmineIssuesHomeAddress).text(redmineAddress.replace(/(file|https)?:\/\//, ""));
+      $("#logoutRedmine").attr("disabled", false);
+    } else {
+      $("#redmineAddressHome").prop("href", "").text("N/A");
+      $("#logoutRedmine").attr("disabled", true);
+    }
   }
 
   set state(value) {
