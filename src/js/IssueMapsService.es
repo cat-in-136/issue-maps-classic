@@ -37,6 +37,9 @@ class IssueMapsService {
       $.ajax({
         method: "GET",
         url: url,
+        data: {
+          limit: 100
+        },
         xhrFields: {
           withCredentials: true
         },
