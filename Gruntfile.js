@@ -35,6 +35,8 @@ module.exports = function(grunt) {
     babel: {
       js: {
         options: {
+          comments: false,
+          compact: true,
           sourceMap: true,
           get inputSourceMap() { return grunt.file.readJSON("tmp/main.es.map"); }, // HACK
           presets: "es2015"
