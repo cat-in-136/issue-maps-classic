@@ -33,9 +33,13 @@ class MapsController {
       });
       google.maps.event.addListener(marker, "click", (event) => {
         let url = this.urlResolver.getIssueURL(issue);
-        let content = $("<div />").html(
+        let description = IssueMapsClassic.escapeHTML(issue.description);
+        if (marked) {
+           description = marked(issue.description);
+        }
+        let content = $(`<div class="issue-popup"/>`).html(
           `<div class="issue-title"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></div>
-           <div class="issue-description">${IssueMapsClassic.escapeHTML(issue.description)}</div>`
+           <div class="issue-description">${description}</div>`
         );
         $("a[href]", content).on("click", (event) => {
           this.infowin.close();
