@@ -63,9 +63,11 @@ class IssueMapsClassic {
       $(dialog).one("close", () => {
         let address = $("#redmineAddress").val().trim();
         let key = $("#redmineKey").val().trim();
+        let projectID = $("#redmineProjectID").val().trim();
         if ((address === "") || (key === "")) { window.setTimeout(() => reject(), 1000); }
         this.service.redmineAddress = address;
         this.service.redmineAccessKey = key;
+        this.service.redmineProjectID = (projectID === "")? undefined : projectID;
         $("#logoutRedmine").attr("disabled", false);
         window.setTimeout(() => resolve(address, key), 1000);
       });

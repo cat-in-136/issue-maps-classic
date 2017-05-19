@@ -89,12 +89,16 @@
       <div class="mdl-dialog__content">
         <p>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" id="redmineAddress" placeholder="https://redmine.example.com">
+            <input class="mdl-textfield__input" type="text" id="redmineAddress" placeholder="https://redmine.example.com" required>
             <label class="mdl-textfield__label" for="redmineAddress">Redmine Address</label>
           </div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="text" id="redmineKey">
+            <input class="mdl-textfield__input" type="text" id="redmineKey" required>
             <label class="mdl-textfield__label" for="redmineKey">Redmine API Access Key</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="text" id="redmineProjectID" value="quest" placeholder="(No Project ID)">
+            <label class="mdl-textfield__label" for="redmineProjectID">Redmine Project ID</label>
           </div>
         </p>
       </div>
