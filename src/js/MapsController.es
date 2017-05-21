@@ -34,8 +34,9 @@ class MapsController {
       google.maps.event.addListener(marker, "click", (event) => {
         let url = this.urlResolver.getIssueURL(issue);
         let description = IssueMapsClassic.escapeHTML(issue.description);
-        if (marked) {
-           description = marked(issue.description);
+        if (window.markdownit) {
+          let md = window.markdownit({linkify: true});
+          description = md.render(issue.description);
         }
         let content = $(`<div class="issue-popup"/>`).html(
           `<div class="issue-title"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></div>

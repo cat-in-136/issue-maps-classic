@@ -80,8 +80,9 @@ class IssuesListController {
     let supportingText = "";
     if (isSelected) {
       let description = IssueMapsClassic.escapeHTML(issue.description);
-      if (marked) {
-         description = marked(issue.description);
+      if (window.markdownit) {
+        let md = window.markdownit({linkify: true});
+        description = md.render(issue.description);
       }
 
       supportingText = `<div class="mdl-color-text--black">
