@@ -95,11 +95,11 @@ class IssuesListController {
                             ${(new Date(issue.created_on)).toLocaleString()}に追加
                           </li>`;
       }
-      if (issue.start_date || issue.end_date) {
+      if (issue.start_date || issue.due_date) {
         supportingText+= `<li>
                             ${IssueMapsClassic.escapeHTML(issue.start_date)}
                             〜
-                            ${IssueMapsClassic.escapeHTML(issue.end_date)}
+                            ${IssueMapsClassic.escapeHTML(issue.due_date)}
                           </li>`;
       }
       supportingText+= `</ul>`;
