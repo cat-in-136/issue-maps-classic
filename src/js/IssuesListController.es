@@ -77,6 +77,13 @@ class IssuesListController {
   renderIssue({issue, isSelected=false}) {
     let url = this.urlResolver.getIssueURL(issue);
 
+    let range = "";
+    if (issue.start_date || issue.due_date) {
+      range += `${IssuesListController._renderDate(issue.start_date)}
+                〜
+                ${IssuesListController._renderDate(issue.due_date)}`;
+    }
+
     let supportingText = "";
     if (isSelected) {
       let description = IssueMapsClassic.escapeHTML(issue.description);
@@ -95,13 +102,6 @@ class IssuesListController {
                             ${(new Date(issue.created_on)).toLocaleString()}に追加
                           </li>`;
       }
-      if (issue.start_date || issue.due_date) {
-        supportingText+= `<li>
-                            ${IssueMapsClassic.escapeHTML(issue.start_date)}
-                            〜
-                            ${IssueMapsClassic.escapeHTML(issue.due_date)}
-                          </li>`;
-      }
       supportingText+= `</ul>`;
     } else {
       supportingText = IssueMapsClassic.escapeHTML((issue.description.length > 100)? (issue.description.substring(0, 97)+"...") : issue.description);
@@ -109,8 +109,13 @@ class IssuesListController {
     let activeClass = (isSelected)? " is-active" : "";
 
     return `<div class="mdl-x-expansion-panel mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--white ${activeClass}" data-issue-id="${issue.id}">
-              <div class="mdl-card__title ${(isSelected)? ' mdl-color--indigo-100' : ''}">
-                <h2 class="mdl-card__title-text"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h2>
+              <div class="mdl-card__title">
+                <div>
+                  <h2 class="mdl-card__title-text"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h2>
+                  <div class="mdl-card__subtitle-text">
+                    ${range}
+                  </div>
+                </div>
               </div>
               <div class="mdl-card__supporting-text">
                 ${supportingText}
@@ -184,6 +189,35 @@ class IssuesListController {
     this.apply();
     if (typeof(this.onfilteredissuesupdated) === "function") {
       this.onfilteredissuesupdated.call(this, {filteredIssues: value});
+    }
+  }
+
+  static _renderDate(date) {
+    if (date == null) {
+      return "";
+    } else if ((typeof(date) === "string") && (/^(\d{4})+[\/\-](\d+)[\/\-](\d+)$/.test(date))) {
+      date = new Date(parseInt(RegExp.$1, 10), parseInt(RegExp.$2, 10) - 1, parseInt(RegExp.$3, 10));
+    }
+
+    let label = date.toISOString().substring(0, "YYYY-MM-DD".length);
+    let now = new Date();
+    let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let delta = (today - date) / (1000 * 60 * 60 * 24);
+
+    if (delta < -10) {
+      return `<time title="${label}">${label}</time>`;
+    } else if (delta < -1) {
+      return `<time title="${label}">${-delta}日後</time>`;
+    } else if (delta < 0) {
+      return `<time title="${label}" class="mdl-color-text--accent">明日</time>`;
+    } else if (delta < 1) {
+      return `<time title="${label}" class="mdl-color-text--accent">今日</time>`;
+    } else if (delta < 2) {
+      return `<time title="${label}" style="text-decoration: line-through;">昨日</time>`;
+    } else if (delta < 10) {
+      return `<time title="${label}" style="text-decoration: line-through;">${delta}日前</time>`;
+    } else {
+      return `<time title="${label}" style="text-decoration: line-through;">${label}</time>`;
     }
   }
 }
