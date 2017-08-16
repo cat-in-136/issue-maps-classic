@@ -109,10 +109,10 @@ class IssuesListController {
     let activeClass = (isSelected)? " is-active" : "";
 
     return `<div class="mdl-x-expansion-panel mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--white ${activeClass}" data-issue-id="${issue.id}">
-              <div class="mdl-card__title">
+              <div class="mdl-card__title ${(isSelected)? 'mdl-color--primary mdl-color-text--primary-contrast' : ''}">
                 <div>
                   <h2 class="mdl-card__title-text"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h2>
-                  <div class="mdl-card__subtitle-text">
+                  <div class="mdl-card__subtitle-text ${(isSelected)? 'mdl-color-text--primary-contrast' : ''}">
                     ${range}
                   </div>
                 </div>
@@ -120,7 +120,7 @@ class IssuesListController {
               <div class="mdl-card__supporting-text">
                 ${supportingText}
               </div>
-              <div class="mdl-card__menu">
+              <div class="mdl-card__menu ${(isSelected)? ' mdl-color--primary mdl-color-text--primary-contrast' : ''}">
                 <button class="mdl-x-expansion-expander-button mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                   <i class="material-icons">${(isSelected)? 'expand_less' : 'expand_more'}</i>
                 </button>
