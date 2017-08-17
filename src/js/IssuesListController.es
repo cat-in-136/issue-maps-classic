@@ -77,11 +77,15 @@ class IssuesListController {
   renderIssue({issue, isSelected=false}) {
     let url = this.urlResolver.getIssueURL(issue);
 
-    let range = "";
+    let subtitle = "";
     if (issue.start_date || issue.due_date) {
-      range += `${IssuesListController._renderDate(issue.start_date)}
+      subtitle += `${IssuesListController._renderDate(issue.start_date)}
                 〜
                 ${IssuesListController._renderDate(issue.due_date)}`;
+    }
+    if (issue.execution_date) {
+      if (subtitle != "") { subtitle += ", "; }
+      subtitle += `実施日:${IssuesListController._renderDate(issue.execution_date)}`;
     }
 
     let supportingText = "";
@@ -114,7 +118,7 @@ class IssuesListController {
                 <div>
                   <h2 class="mdl-card__title-text"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h2>
                   <div class="mdl-card__subtitle-text ${(isSelected)? 'mdl-color-text--primary-contrast' : ''}">
-                    ${range}
+                    ${subtitle}
                   </div>
                 </div>
               </div>

@@ -92,6 +92,9 @@ class IssueMapsService {
         if ((c.name == "場所" || c.name.toLowerCase() == "place") && c.value) {
           [issue.latitude, issue.longitude] = c.value.split(",");
         }
+        if ((c.name == "実施日" || c.name.toLowerCase() == "execution date") && c.value) {
+          issue.execution_date = c.value;
+        }
       }
     }
     return {
@@ -105,6 +108,7 @@ class IssueMapsService {
       start_date: issue.start_date,
       due_date: issue.due_date,
       created_on: issue.created_on,
+      execution_date: issue.execution_date,
       category: issue.category && issue.category.name,
     };
 
