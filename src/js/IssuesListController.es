@@ -96,6 +96,7 @@ class IssuesListController {
                           ${description}
                         </div>`;
       supportingText+= `<ul style="list-style: none; padding: 0;">`;
+      supportingText+= `<li>ステータス:${issue.status}</li>`;
       if (issue.author && issue.created_on) {
         supportingText+= `<li>
                             ${IssueMapsClassic.escapeHTML(issue.author)}が
