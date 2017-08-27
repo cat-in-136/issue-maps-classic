@@ -45,14 +45,13 @@ class IssueMapsService {
       return Promise.reject(new Error("Login required"));
     }
 
-    return new Promise((resolve, reject) => {
+    let issues = [];
+    let ajaxRedmineIssues = (data) => new Promise((resolve, reject) => {
       let url = this.getRedmineIssuesHomeAddress("json");
-      $.ajax({
+      return $.ajax({
         method: "GET",
         url: url,
-        data: {
-          limit: 100
-        },
+        data: data,
         xhrFields: {
           withCredentials: true
         },
@@ -60,13 +59,24 @@ class IssueMapsService {
           xhr.setRequestHeader("X-Redmine-API-Key", this.redmineAccessKey);
         }
       }).then((data, textStatus, jqXHR) => {
-        this.issuesCache = {};
-        data.issues.forEach((issue) => this.issuesCache[issue.id.toString()] = issue);
-
-        resolve(IssueMapsService.formatIssues(data.issues));
+        data.issues.forEach((issue) => issues.push(issue));
+        resolve(data);
       }).fail((data, textStatus, errorThrown) => {
         reject(new Error({data, textStatus, errorThrown}));
       });
+    });
+
+    let limit = 100;
+    return ajaxRedmineIssues({limit}).then((data) => {
+      let promisePagination = [];
+      for (let offset = limit; offset < data.total_count; offset += limit) {
+        promisePagination.push(ajaxRedmineIssues({limit, offset}));
+      }
+      return Promise.all(promisePagination);
+    }).then(() => {
+      this.issuesCache = {};
+      issues.forEach((issue) => this.issuesCache[issue.id.toString()] = issue);
+      return Promise.resolve(IssueMapsService.formatIssues(issues));
     });
   }
 
