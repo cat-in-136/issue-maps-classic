@@ -100,7 +100,7 @@ class IssuesListController {
                           ${description}
                         </div>`;
       supportingText+= `<ul style="list-style: none; padding: 0;">`;
-      supportingText+= `<li>ステータス:${issue.status}</li>`;
+      supportingText+= `<li>ステータス:${(issue.is_open)? '' : '<i class="material-icons">done</i>'}${IssueMapsClassic.escapeHTML(issue.status)}</li>`;
       if (issue.author && issue.created_on) {
         supportingText+= `<li>
                             ${IssueMapsClassic.escapeHTML(issue.author)}が
@@ -116,7 +116,10 @@ class IssuesListController {
     return `<div class="mdl-x-expansion-panel mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-color--white ${activeClass}" data-issue-id="${issue.id}">
               <div class="mdl-card__title ${(isSelected)? 'mdl-color--primary mdl-color-text--primary-contrast' : ''}">
                 <div>
-                  <h2 class="mdl-card__title-text"><a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a></h2>
+                  <h2 class="mdl-card__title-text">
+                    ${(issue.is_open)? '' : '<i class="material-icons">done</i>'}
+                    <a href="${url}">${IssueMapsClassic.escapeHTML(issue.title)}</a>
+                  </h2>
                   <div class="mdl-card__subtitle-text ${(isSelected)? 'mdl-color-text--primary-contrast' : ''}">
                     ${subtitle}
                   </div>

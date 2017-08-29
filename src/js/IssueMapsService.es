@@ -46,7 +46,7 @@ class IssueMapsService {
     }
 
     let issues = [];
-    let ajaxRedmineIssues = (data) => new Promise((resolve, reject) => {
+    let ajaxRedmineIssues = (data, extra) => new Promise((resolve, reject) => {
       let url = this.getRedmineIssuesHomeAddress("json");
       return $.ajax({
         method: "GET",
@@ -59,7 +59,10 @@ class IssueMapsService {
           xhr.setRequestHeader("X-Redmine-API-Key", this.redmineAccessKey);
         }
       }).then((data, textStatus, jqXHR) => {
-        data.issues.forEach((issue) => issues.push(issue));
+        data.issues.forEach((issue) => {
+          Object.keys(extra || {}).forEach((key) => issue[key] = extra[key]);
+          issues.push(issue);
+        });
         resolve(data);
       }).fail((data, textStatus, errorThrown) => {
         reject(new Error({data, textStatus, errorThrown}));
@@ -67,13 +70,15 @@ class IssueMapsService {
     });
 
     let limit = 100;
-    return ajaxRedmineIssues({limit}).then((data) => {
-      let promisePagination = [];
-      for (let offset = limit; offset < data.total_count; offset += limit) {
-        promisePagination.push(ajaxRedmineIssues({limit, offset}));
-      }
-      return Promise.all(promisePagination);
-    }).then(() => {
+    return ["open", "closed"].reduce((promise, status_id) => {
+      return ajaxRedmineIssues({limit, status_id}, {status_id}).then((data) => {
+        let promisePagination = [];
+        for (let offset = limit; offset < data.total_count; offset += limit) {
+          promisePagination.push(ajaxRedmineIssues({limit, offset, status_id}, {status_id}));
+        }
+        return Promise.all(promisePagination);
+      });
+    }, Promise.resolve([])).then(() => {
       this.issuesCache = {};
       issues.forEach((issue) => this.issuesCache[issue.id.toString()] = issue);
       return Promise.resolve(IssueMapsService.formatIssues(issues));
@@ -112,6 +117,7 @@ class IssueMapsService {
       latitude: issue.latitude,
       longitude: issue.longitude,
       status: issue.status.name,
+      is_open: issue.status_id === "open",
       title: issue.subject,
       description: issue.description,
       author: issue.author.name,
