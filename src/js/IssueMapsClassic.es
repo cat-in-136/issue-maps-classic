@@ -3,7 +3,7 @@ class IssueMapsClassic {
     this.service = new IssueMapsService();
     this.urlResolver = new IssueMapsURLResolver(this.service);
     this.mapController = new MapsController({element: $("#map")[0], urlResolver: this.urlResolver});
-    this.issuesListController = new IssuesListController({list: "#issuesList", searchText: "#issueSearch", searchTextLabel: "label[for=issueSearch]", urlResolver: this.urlResolver});
+    this.issuesListController = new IssuesListController({list: "#issuesList", searchText: "#issueSearch", searchTextLabel: "label[for=issueSearch]", issueStatusFilterName: "issue_status_filter", urlResolver: this.urlResolver});
 
     $("dialog").each(function () {
       if (! this.showModal) {

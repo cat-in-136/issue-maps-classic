@@ -1,9 +1,10 @@
 class IssuesListController {
-  constructor({list, searchText, searchTextLabel, urlResolver}) {
+  constructor({list, searchText, searchTextLabel, issueStatusFilterName, urlResolver}) {
     this.listElem = list;
     this.searchTextElem = searchText;
     this.searchTextLabelElem = searchTextLabel;
     this.searchTextDataList = $(searchText)[0].list;
+    this.issueStatusFilterName = issueStatusFilterName;
     this.urlResolver = urlResolver;
 
     $(this.searchTextElem).on("change keyup", () => this.updateFilteredIssues());
@@ -11,6 +12,8 @@ class IssuesListController {
       let listItem = $(event.target).parents("[data-issue-id]");
       this.selectedIssueId = (listItem.hasClass("is-active"))? -1 : parseInt(listItem.data("issue-id"));
     });
+
+    $(`input[name=${this.issueStatusFilterName}]`).on("change", () => this.updateFilteredIssues());
   }
   apply() {
     if (this.filteredIssues.length > 0) {
@@ -49,7 +52,14 @@ class IssuesListController {
   }
   updateFilteredIssues() {
     let keyphrase = $.trim($(this.searchTextElem).val()).toLowerCase();
+    let issueStatusFilter = $(`input[name=${this.issueStatusFilterName}]:checked`).val();
     let filteredIssues = this.issues.filter((issue) => {
+      if ((issueStatusFilter === "open") && !issue.is_open) {
+        return false;
+      } else if ((issueStatusFilter === "closed") && issue.is_open) {
+        return false;
+      }
+
       if (keyphrase.match(/^\s*$/)) {
         return true;
       } else if (keyphrase.match(/^id:([0-9]+)$/)) {
