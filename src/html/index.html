@@ -84,7 +84,26 @@
           <a href="" class="mdl-typography--body-1" id="redmineAddressHome">N/A</a>
         </div>
       </header>
-      <nav class="mdl-navigation">
+      <nav class="mdl-navigation" id="navigation">
+        <div class="mdl-navigation__link">
+          <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="openQuests">
+            <input type="radio" id="openQuests" class="mdl-radio__button" name="issue_status_filter" value="open" checked>
+            <span class="mdl-radio__label">Open quests</span>
+          </label>
+        </div>
+        <div class="mdl-navigation__link">
+          <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="closedQuests">
+            <input type="radio" id="closedQuests" class="mdl-radio__button" name="issue_status_filter" value="closed">
+            <span class="mdl-radio__label">Closed quests</span>
+          </label>
+        </div>
+        <div class="mdl-navigation__link">
+          <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="allQuests">
+            <input type="radio" id="allQuests" class="mdl-radio__button" name="issue_status_filter" value="all">
+            <span class="mdl-radio__label">All quests</span>
+          </label>
+        </div>
+        <hr>
         <a class="mdl-navigation__link" href="" id="logoutRedmine">Logout</a>
       </nav>
     </div>
