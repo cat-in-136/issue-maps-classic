@@ -43,6 +43,10 @@ class IssuesListController {
         $(`[data-issue-id="${this.selectedIssueId}"]`, this.listElem).replaceWith(
           this.renderIssue({issue: this.selectedIssue, isSelected: true})
         );
+        $(this.listElem).parent().animate({
+          scrollTop: $(`[data-issue-id="${this.selectedIssueId}"]`, this.listElem).offset().top -
+                     $(this.listElem).offset().top - 5
+        });
       }
 
       if (typeof(this.onselectedissuechanged) === "function") {
