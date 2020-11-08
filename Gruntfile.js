@@ -39,7 +39,7 @@ module.exports = function(grunt) {
           compact: true,
           sourceMap: true,
           get inputSourceMap() { return grunt.file.readJSON("tmp/main.es.map"); }, // HACK
-          presets: "es2015"
+          presets: ['@babel/preset-env']
         },
         files: {
           "public/js/main.js": "tmp/main.es"
