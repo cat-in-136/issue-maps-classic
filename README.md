@@ -1,6 +1,6 @@
 # issue-maps-classic
 
-[![Build Status](https://travis-ci.org/cat-in-136/issue-maps-classic.svg?branch=master)](https://travis-ci.org/cat-in-136/issue-maps-classic)
+[![Node.js CI](https://github.com/cat-in-136/issue-maps-classic/workflows/Node.js%20CI/badge.svg)](https://github.com/cat-in-136/issue-maps-classic/actions)
 
 classical style implementation of diffshare/issue-maps.
 
