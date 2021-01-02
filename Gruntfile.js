@@ -46,9 +46,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      copy_main: {
+      replace_html: {
         files: "src/html/*",
-        tasks: ["copy:main"],
+        tasks: ["replace:html"],
         options: {
           livereload: true
         }
