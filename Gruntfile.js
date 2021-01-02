@@ -10,16 +10,15 @@ module.exports = function(grunt) {
         src: ["tmp"]
       }
     },
-    copy: {
-      main: {
-        files: [
-          {
-            expand: true,
-            cwd: "src/html",
-            src: ["*.html"],
-            dest: "public"
-          },
-        ],
+
+    replace: {
+      html: {
+        src: ['src/html/*.html'],
+        dest: 'public/',
+        replacements: [{
+          from: 'GOOGLE_API_KEY',
+          to: process.env.GOOGLE_API_KEY
+        }]
       }
     },
     concat: {
@@ -47,9 +46,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      copy_main: {
+      replace_html: {
         files: "src/html/*",
-        tasks: ["copy:main"],
+        tasks: ["replace:html"],
         options: {
           livereload: true
         }
@@ -85,7 +84,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -93,7 +92,7 @@ module.exports = function(grunt) {
 
 
   grunt.registerTask("init", ["clean"]);
-  grunt.registerTask("build", ["copy:main", "concat:js", "babel:js", "clean:tmp"]);
+  grunt.registerTask("build", ["replace:html", "concat:js", "babel:js", "clean:tmp"]);
   grunt.registerTask("serve", ["connect", "watch"]);
   grunt.registerTask("default", ["serve"]);
 };

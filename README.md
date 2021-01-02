@@ -7,11 +7,14 @@ classical style implementation of diffshare/issue-maps.
 # Build
 ```
 $ npm install
-$ npm run-script build
+$ GOOGLE_API_KEY=your_google_api_key npm run build
 ```
 
 # Preview
 ```
 $ npm install
-$ npm run-script serve
+$ GOOGLE_API_KEY=your_google_api_key npm run build
+$ GOOGLE_API_KEY=your_google_api_key npm run serve
 ```
+
+# Google API Key
