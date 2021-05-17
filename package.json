@@ -18,9 +18,9 @@
   "author": "cat-in-136",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "grunt": "^1.3.0",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "grunt": "^1.4.0",
     "grunt-babel": "^8.0.0",
     "grunt-contrib-clean": "~2.0.0",
     "grunt-contrib-compress": "~2.0.0",
