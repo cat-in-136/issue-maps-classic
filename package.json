@@ -9,7 +9,7 @@
     "build": "grunt build",
     "zip": "grunt compress",
     "serve": "grunt serve",
-    "test": "npm build"
+    "test": "npm run build"
   },
   "repository": {
     "type": "git",
